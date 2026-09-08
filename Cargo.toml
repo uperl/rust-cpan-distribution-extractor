@@ -1,0 +1,12 @@
+[package]
+name = "cpan-distribution-extractor"
+version = "0.1.0"
+edition = "2024"
+description = "Extract Perl distribtion from tarball in various formats."
+repository = "https://github.com/uperl/cpan-distribution-extractor"
+license = "MIT"
+
+[dependencies]
+anyhow = "1.0.104"
+
+
