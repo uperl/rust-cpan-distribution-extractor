@@ -2,11 +2,25 @@
 name = "cpan-distribution-extractor"
 version = "0.1.0"
 edition = "2024"
-description = "Extract Perl distribtion from tarball in various formats."
+description = "Unpack a CPAN distribution release archive (.tar, .tar.gz, .tar.bz2, .tar.xz, .zip)."
 repository = "https://github.com/uperl/cpan-distribution-extractor"
 license = "MIT"
 
+[features]
+default = ["xz"]
+# `.tar.xz` support. Pulls `xz2` / `lzma-sys`, which builds a vendored `liblzma`
+# from C source and links it statically -- no shared library at runtime. Turn it
+# off (`--no-default-features`) on toolchains without a C compiler; `.tar.xz`
+# archives then return `Error::UnsupportedFormat`.
+xz = ["dep:xz2"]
+
 [dependencies]
-anyhow = "1.0.104"
+thiserror = "2"
+tar = "0.4"
+flate2 = "1"                                                                       # gzip, pure-Rust miniz_oxide backend
+bzip2 = { version = "0.5", default-features = false, features = ["libbz2-rs-sys"] } # pure-Rust bzip2
+zip = { version = "2", default-features = false, features = ["deflate"] }           # pure-Rust deflate + stored
+xz2 = { version = "0.1", features = ["static"], optional = true }                   # vendored, statically linked liblzma
 
-
+[dev-dependencies]
+tempfile = "3"
